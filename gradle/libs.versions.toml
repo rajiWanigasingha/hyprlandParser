@@ -1,0 +1,15 @@
+[versions]
+slf4j-version = "2.0.16"
+logback-version = "1.5.16"
+serialization-plugin-version = "2.1.10"
+serialization = "1.8.0"
+arrow = "2.0.1"
+
+[libraries]
+slf4j-logger = { module = "org.slf4j:slf4j-api" , version.ref = "slf4j-version" }
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback-version" }
+kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json" ,version.ref = "serialization" }
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
+
+[plugins]
+kotlin-serialization-plugin = { id = "org.jetbrains.kotlin.plugin.serialization" ,version.ref = "serialization-plugin-version" }
