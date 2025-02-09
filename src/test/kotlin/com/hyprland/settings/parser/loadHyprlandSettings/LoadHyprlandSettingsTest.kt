@@ -12,7 +12,7 @@ class LoadHyprlandSettingsTest {
     private val loadHyprlandSettings = LoadHyprlandSettings()
 
     @Test
-    fun `bacis test`() {
+    fun `Test if it load all the settings from hyprland`() {
 
         runCatching {
 
@@ -24,7 +24,7 @@ class LoadHyprlandSettingsTest {
 
                     if (it.metaData.type == Type.OK) {
                         it.body?.forEach { lineObject: LineObject ->
-                            logger.info(lineObject.line)
+                            logger.info("${lineObject.message} ${lineObject.line}")
                         }
                     } else {
 

@@ -11,7 +11,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 /**
- *
  * ### [LoadHyprlandSettings]
  *
  * ***Package*** [com.hyprland.settings.parser.loadHyprlandSettings]
@@ -20,36 +19,33 @@ import java.nio.file.Path
  * further use
  *
  * ###### Methods
- *
  * - [load] This will load all the settings.
- *
  */
 class LoadHyprlandSettings {
 
     private val logger = LoggerFactory.getLogger(javaClass::class.java)
+
     /**
      * ###### Instant of [ValidatePath]
      *
      * This will use to validate hyprland file path and source file path
      */
     private val validatePath = ValidatePath()
-    /**
-     * This get `Username` of linux system
-     */
+
+    /** This get `Username` of linux system */
     private val home = System.getProperty("user.home")
 
     private var pathToHyprland = Path.of("")
-    /**
-     * This will hold all valid and invalid lines of hyprland settings file
-     */
+
+    /** This will hold all valid and invalid lines of hyprland settings file */
     private val validSettingsFile: MutableList<LineObject> = mutableListOf()
-    /**
-     * This will temporarily hold hyprlang settings
-     */
+
+    /** This will temporarily hold hyprlang settings */
     private val hyprlangHolder: MutableList<String> = mutableListOf()
 
     /**
-     * These will use for checking if it needs to add next line in [hyprlangHolder]
+     * These will use for checking if it needs to add next line in
+     * [hyprlangHolder]
      */
     private var addToHyprlandHolder = false
     private var hyprlandOpen = 0
