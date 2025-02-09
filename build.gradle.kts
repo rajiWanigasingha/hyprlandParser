@@ -32,13 +32,21 @@ subprojects {
     apply(plugin = "org.jetbrains.dokka")
 }
 
+tasks.dokkaHtml {
+    outputDirectory.set(rootProject.layout.projectDirectory.dir("docs"))
+}
+
+tasks.dokkaGfm {
+    outputDirectory.set(layout.buildDirectory.dir("documentation/markdown"))
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
             groupId = "com.hyprland.settings.parser"
             artifactId = "parser"
-            version = "1.0-SNAPSHOT"
+            version = "1.0-DEV"
         }
     }
     repositories {
