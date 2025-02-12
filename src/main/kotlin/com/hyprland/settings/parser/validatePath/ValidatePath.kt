@@ -1,28 +1,28 @@
 package com.hyprland.settings.parser.validatePath
 
-import com.hyprland.settings.parser.validatePath.exceptions.FileDoseNotExistException
-import com.hyprland.settings.parser.validatePath.exceptions.FileIsNotReadableException
-import com.hyprland.settings.parser.validatePath.exceptions.HyprlandSettingsFileDoseNotExist
-import com.hyprland.settings.parser.validatePath.exceptions.HyprlandSettingsFileIsNotReadable
+import com.hyprland.settings.parser.validatePath.exceptions.*
+import com.hyprland.settings.parser.validatePath.utils.PathHyprland
+import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory
 import java.io.BufferedReader
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardOpenOption
 
 
 /**
- *
  * ### [ValidatePath]
  *
  * ***Package*** [com.hyprland.settings.parser.validatePath]
  *
- * This class use for validating the default hyprland path and given the source path.
+ * This class use for validating the default hyprland path and given the
+ * source path.
  *
  * ###### Methods
- *
- *-  [validateHyprlandPath] - Use for validating the default hyprland file path.
- *-  [validateSourceFileFromSettings] - Use for validation given the path of source files.
- *
+ * - [validateHyprlandPath] - Use for validating the default hyprland file
+ *   path.
+ * - [validateSourceFileFromSettings] - Use for validation given the path
+ *   of source files.
  */
 class ValidatePath {
 
@@ -31,10 +31,39 @@ class ValidatePath {
     /**
      * ###### Hyprland settings default file path
      *
-     * `TODO` This file need to be read from resource folder
-     *
+     * Load this path from hyprLoc in the resource folder.
      */
-    private val path = Path.of("${System.getProperty("user.home")}/.config/hypr/hyprland.conf")
+    private var path: Path = Path.of("")
+
+    init {
+        val jsonFile = Path.of(("src/main/resources/hyprLoc.json"))
+        runCatching {
+
+            Files
+                .readString(jsonFile)
+                .takeIf { it.isNotEmpty() }
+                ?.let {
+                    Json.decodeFromString<PathHyprland>(it).let { pathHyprland: PathHyprland ->
+                        path = Path.of("${System.getProperty("user.home")}/${pathHyprland.path}")
+                    }
+                }
+                ?: throw NoPathInResourceFolder()
+
+        }.onFailure { exception: Throwable ->
+            path = Path.of("${System.getProperty("user.home")}/.config/hypr/hyprland.conf")
+
+            when (exception) {
+                is NoPathInResourceFolder -> {
+                    Files.writeString(
+                        jsonFile,
+                        Json.encodeToString(PathHyprland(path = "./config/hypr/hyprland.conf")),
+                        StandardOpenOption.WRITE,
+                        StandardOpenOption.TRUNCATE_EXISTING
+                    )
+                }
+            }
+        }
+    }
 
     /**
      * ##### [validateHyprlandPath]
@@ -167,6 +196,54 @@ class ValidatePath {
 
         logger.error("This path is not readable => $path")
         throw FileIsNotReadableException(path.toString())
+    }
+
+
+    /**
+     *
+     * #### [changePathFromHome]
+     *
+     * This use to change the path of the default hyprland file.
+     *
+     * @param path as [String]
+     *
+     */
+    fun changePathFromHome(path: String) {
+        val jsonFile = Path.of("src/main/resources/hyprLoc.json")
+
+        runCatching {
+            Files
+                .readString(jsonFile)
+                .takeIf { it.isNotEmpty() }
+                ?.let {
+                    val hyprJson = Json.decodeFromString<PathHyprland>(it)
+
+                    hyprJson.path = path
+
+                    val updateJson = Json.encodeToString(hyprJson)
+
+                    Files.writeString(
+                        jsonFile,
+                        updateJson,
+                        StandardOpenOption.WRITE,
+                        StandardOpenOption.TRUNCATE_EXISTING
+                    )
+                }
+                ?: throw NoPathInResourceFolder()
+
+        }.onFailure { exception: Throwable ->
+
+            when (exception) {
+                is NoPathInResourceFolder -> {
+                    Files.writeString(
+                        jsonFile,
+                        Json.encodeToString(PathHyprland(path = "./config/hypr/hyprland.conf")),
+                        StandardOpenOption.WRITE,
+                        StandardOpenOption.TRUNCATE_EXISTING
+                    )
+                }
+            }
+        }
     }
 
 }

@@ -4,6 +4,11 @@ import com.hyprland.settings.parser.filter.utils.TokenVariablesValue
 import com.hyprland.settings.parser.store.VariableStore
 import org.slf4j.LoggerFactory
 
+/**
+ *
+ * ### [VariableTokens]
+ *
+ */
 class VariableTokens {
 
     private val logger = LoggerFactory.getLogger(javaClass::class.java)

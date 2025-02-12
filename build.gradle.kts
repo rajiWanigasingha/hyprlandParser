@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.hyprland.settings.parser"
-version = "1.0-DEV"
+version = "0.0.1-DEV"
 
 repositories {
     mavenCentral()
@@ -40,13 +40,18 @@ tasks.dokkaGfm {
     outputDirectory.set(layout.buildDirectory.dir("documentation/markdown"))
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
             groupId = "com.hyprland.settings.parser"
             artifactId = "parser"
-            version = "1.0-DEV"
+            version = "0.0.1-DEV"
         }
     }
     repositories {

@@ -5,11 +5,34 @@ import com.hyprland.settings.parser.filter.utils.TokenExecuteValue
 import com.hyprland.settings.parser.store.ExecuteStore
 import org.slf4j.LoggerFactory
 
+/**
+ *
+ * ### [ExecuteTokens]
+ *
+ * Use for filtering and storing of execute keywords.
+ *
+ * ###### Methods
+ *
+ * [process] to filtering and storing.
+ *
+ */
 class ExecuteTokens {
 
     private val logger = LoggerFactory.getLogger(javaClass::class.java)
+
+    /**
+     * Instant of [ExecuteStore]
+     */
     private val executeStore = ExecuteStore
 
+    /**
+     * ##### [Process]
+     *
+     * This will store values according to keyword and values
+     *
+     * @param line as [String] line of value of `execute` settings
+     * @param keyword as [String] keyword for find specific settings like `exec` ,`exec-once`
+     */
     fun process(line: String, keyword: String) {
 
         line
